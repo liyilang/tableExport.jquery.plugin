@@ -237,7 +237,7 @@ THE SOFTWARE.*/
 						$(this).filter(':visible').find('td').each(function(index,data) {
 							if ($(this).css('display') != 'none'){	
 								if(defaults.ignoreColumn.indexOf(index) == -1){
-									excel += "<td>"+parseString($(this))+"</td>";
+									excel += "<td>"+parseString($(this).find('span'))+"</td>";
 								}
 							}
 							colCount++;
@@ -253,6 +253,8 @@ THE SOFTWARE.*/
 					
 					var excelFile = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:x='urn:schemas-microsoft-com:office:"+defaults.type+"' xmlns='http://www.w3.org/TR/REC-html40'>";
 					excelFile += "<head>";
+					//add charset
+					excelFile += "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>";
 					excelFile += "<!--[if gte mso 9]>";
 					excelFile += "<xml>";
 					excelFile += "<x:ExcelWorkbook>";
@@ -275,7 +277,9 @@ THE SOFTWARE.*/
 					excelFile += "</body>";
 					excelFile += "</html>";
 
-					var base64data = "base64," + $.base64.encode(excelFile);
+					//var base64data = "base64," + $.base64.encode(excelFile);
+					//slove the problem of Chinese grabled
+					var base64data=function(s){return window.btoa(unescape(encodeURLComponent(s)))};
 					window.open('data:application/vnd.ms-'+defaults.type+';filename=exportData.doc;' + base64data);
 					
 				}else if(defaults.type == 'png'){
